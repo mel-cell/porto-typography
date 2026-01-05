@@ -1,0 +1,98 @@
+<header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-8 px-[3%] md:px-[5%] border-b border-transparent bg-transparent group">
+    <div class="relative w-full">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center transition-all duration-500">
+            <!-- Left: Branding -->
+            <a href="#" class="flex flex-col gap-1 md:flex-row md:gap-4 items-start md:items-center z-20 relative mix-blend-difference text-current">
+                <span class="text-xs md:text-sm font-mono tracking-widest uppercase text-gray-900 group-[.is-scrolled]:text-black font-medium">
+                    Maulidani Brian Melvino
+                </span>
+                <span class="hidden md:block text-gray-400">/</span>
+                <span class="text-xs md:text-sm font-mono tracking-widest uppercase text-gray-500 group-[.is-scrolled]:text-gray-700">
+                    Portfolio 2026
+                </span>
+            </a>
+
+            <!-- Right: Navigation & Socials -->
+            <div class="hidden md:flex items-center gap-12 lg:gap-16 transition-all duration-500">
+                <nav>
+                    <ul class="flex items-center gap-8">
+                        <li><a href="#about" class="text-xs font-medium uppercase tracking-widest text-gray-600 hover:text-black transition-colors hover-underline-animation">About Me</a></li>
+                        <li><a href="#skills" class="text-xs font-medium uppercase tracking-widest text-gray-600 hover:text-black transition-colors hover-underline-animation">Skills</a></li>
+                        <li><a href="#projects" class="text-xs font-medium uppercase tracking-widest text-gray-600 hover:text-black transition-colors hover-underline-animation">Projects</a></li>
+                        <li><a href="#contact" class="text-xs font-medium uppercase tracking-widest text-gray-600 hover:text-black transition-colors hover-underline-animation">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden absolute top-0 right-0 p-2 text-black hover:bg-gray-100/50 rounded-md transition-colors z-20" aria-label="Menu">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="absolute top-0 left-0 w-full h-screen bg-white flex flex-col items-center justify-center gap-8 hidden transition-opacity duration-300 opacity-0 pointer-events-none data-[open=true]:opacity-100 data-[open=true]:pointer-events-auto z-40">
+        <nav>
+            <ul class="flex flex-col items-center gap-6">
+                <li><a href="#about" class="mobile-link text-3xl font-black uppercase tracking-tighter text-black hover:text-gray-600">About Me</a></li>
+                <li><a href="#skills" class="mobile-link text-3xl font-black uppercase tracking-tighter text-black hover:text-gray-600">Skills</a></li>
+                <li><a href="#projects" class="mobile-link text-3xl font-black uppercase tracking-tighter text-black hover:text-gray-600">Projects</a></li>
+                <li><a href="#contact" class="mobile-link text-3xl font-black uppercase tracking-tighter text-black hover:text-gray-600">Contact</a></li>
+            </ul>
+        </nav>
+        <button id="close-menu-btn" class="absolute top-8 right-[5%] p-2">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+    </div>
+</header>
+<!-- Spacer REMOVED to allow Hero to sit at top -->
+
+<script>
+    const navbar = document.getElementById('navbar');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    
+    const handleScroll = () => {
+        if (window.scrollY > 50) {
+            navbar?.classList.add('is-scrolled');
+            navbar?.classList.add('bg-white/80', 'backdrop-blur-md', 'py-4', 'border-gray-200', 'shadow-sm');
+            navbar?.classList.remove('py-8', 'bg-transparent', 'border-transparent');
+        } else {
+            navbar?.classList.remove('is-scrolled');
+            navbar?.classList.add('py-8', 'bg-transparent', 'border-transparent');
+            navbar?.classList.remove('bg-white/80', 'backdrop-blur-md', 'py-4', 'border-gray-200', 'shadow-sm');
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    function toggleMenu(show: any) {
+        if (mobileMenu) {
+            const isShowing = show === true; 
+            if (isShowing) {
+                mobileMenu.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    mobileMenu.setAttribute('data-open', 'true');
+                });
+                document.body.style.overflow = 'hidden';
+            } else {
+                 mobileMenu.setAttribute('data-open', 'false');
+                 setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                 }, 300);
+                 document.body.style.overflow = '';
+            }
+        }
+    }
+
+    mobileMenuBtn?.addEventListener('click', () => toggleMenu(true));
+    closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
+    
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
+    });
+</script>

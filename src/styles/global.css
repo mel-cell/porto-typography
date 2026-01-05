@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Space Grotesk", monospace;
+
+  --color-primary: #1a1a1a;
+  --color-background-light: #ffffff;
+  --color-background-dark: #121212;
+  --color-surface-light: #f4f4f4;
+  --color-surface-dark: #1e1e1e;
+  --color-text-light: #1a1a1a;
+  --color-text-dark: #e0e0e0;
+  --color-gray-light: #757575;
+  --color-gray-dark: #a0a0a0;
+}
+
+/* Custom utilities based on user snippet */
+.giant-text {
+  font-size: clamp(3.5rem, 14vw, 12rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-family: var(--font-sans);
+}
+
+.swiss-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+html,
+body {
+  height: 100%;
+}
