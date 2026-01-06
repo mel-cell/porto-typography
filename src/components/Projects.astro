@@ -1,252 +1,92 @@
----
-interface Repository {
-  name: string;
-  description: string;
-  html_url: string;
-  language: string;
-  topics: string[];
-  default_branch: string;
-  owner: {
-    login: string;
-  };
-}
-
-interface ProjectWithImage extends Repository {
-  imageUrl?: string | null;
-}
-
-let featuredProjects: ProjectWithImage[] = [];
-
-// Helper: Fetch Image from /demo folder
-async function fetchRepoImage(owner: string, repo: string, headers: HeadersInit) {
-    try {
-        const contentsRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/demo`, { headers });
-        if (contentsRes.ok) {
-            const files = await contentsRes.json();
-            if (Array.isArray(files)) {
-                // Look for common image extensions
-                const imageFile = files.find((f: any) => f.name.match(/\.(png|jpg|jpeg|webp|gif)$/i));
-                if (imageFile) return imageFile.download_url;
-            }
-        }
-    } catch (err) { /* ignore */ }
-    return null;
-}
-
-try {
-    const headers = {
-        'User-Agent': 'Mozilla/5.0 (compatible; Portfolio/1.0; +https://github.com/mel-cell)'
-    };
-
-    let validProjects: Repository[] = [];
-    let isOffline = false;
-
-    // PRIMARY STRATEGY: Fetch Starred Projects via API
-    try {
-        const starredRes = await fetch('https://api.github.com/users/mel-cell/starred', { headers });
-        if (starredRes.ok) {
-            const allStarred = await starredRes.json();
-            if (Array.isArray(allStarred)) {
-                // Filter: Owned by mel-cell, terarush, or is StreetAI
-                validProjects = allStarred.filter((repo: any) => 
-                    ['mel-cell', 'terarush'].includes(repo.owner?.login) || 
-                    repo.name.toLowerCase().includes('streetai')
-                ).slice(0, 6); // Limit to top 6
-            }
-        } else {
-            console.warn('GitHub API responded with:', starredRes.status);
-            isOffline = true;
-        }
-    } catch (e) { 
-        console.warn('API fetch failed:', e);
-        isOffline = true;
-    }
-
-    // FALLBACK STRATEGY: Static Data (Used if API fails/offline)
-    if (validProjects.length === 0 || isOffline) {
-        validProjects = [
-            {
-                name: "StreetAI",
-                description: "An intelligent travel assistant and dashboard designed to help users explore locations and create personalized itineraries effortlessly.",
-                html_url: "https://github.com/terarush/StreetAI",
-                language: "TypeScript",
-                topics: ["ai", "maps", "travel"],
-                default_branch: "main",
-                owner: { login: "terarush" }
-            },
-            {
-                name: "docktop",
-                description: "MacOS-style Dock for Linux. A desktop enhancement tool.",
-                html_url: "https://github.com/mel-cell/docktop",
-                language: "TypeScript",
-                topics: ["linux", "productivity"],
-                default_branch: "main",
-                owner: { login: "mel-cell" }
-            },
-            {
-                name: "coralwind",
-                description: "A fresh, customizable aesthetic theme for modern web interfaces.",
-                html_url: "https://github.com/mel-cell/coralwind",
-                language: "CSS",
-                topics: ["design-system", "theme"],
-                default_branch: "main",
-                owner: { login: "mel-cell" }
-            }
-        ];
-    }
-
-    // Enhance with Images (Try to fetch even for static list if not blocked, otherwise null)
-    featuredProjects = await Promise.all(validProjects.map(async (repo) => {
-        let imageUrl = null;
-        if (!isOffline) {
-            imageUrl = await fetchRepoImage(repo.owner.login, repo.name, headers);
-        }
-        
-        // If still no image and it's StreetAI, use a reliable fallback or allow placeholder
-        // Hack: Use GitHub Social Preview as specific fallback for StreetAI to guarantee image
-        if (!imageUrl && repo.name.toLowerCase().includes('streetai')) {
-             imageUrl = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
-        }
-
-        return { ...repo, imageUrl };
-    }));
-
-    // Prioritize StreetAI to First Position (Big Card)
-    const mainIndex = featuredProjects.findIndex(p => p.name.toLowerCase() === 'streetai' || p.name.toLowerCase() === 'street-ai');
-    if (mainIndex > -1) {
-        const [main] = featuredProjects.splice(mainIndex, 1);
-        featuredProjects.unshift(main);
-    }
-
-} catch (error) {
-    console.error('Project fetching error:', error);
-}
----
-
-<section class="px-[5%] md:px-[10%] py-24 md:py-40 bg-surface-light" id="projects">
-    <div class="w-full mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-y-16 md:gap-y-0 gap-x-8">
-            {/* Title Section (Left Column) */}
-            <div class="md:col-span-3 flex flex-col justify-between h-full animate-on-scroll">
-                <div>
-                    <span class="text-xs font-mono uppercase tracking-widest border border-black px-2 py-1 inline-block mb-8">Selected Projects</span>
-                    <h2 class="text-4xl md:text-6xl font-bold leading-[0.9] mb-8 tracking-tight">Software <br/>Engineering</h2>
-                    <p class="text-gray-600 text-lg mb-12 leading-relaxed max-w-xs">
-                        Curated projects from my portfolio collection.
+<section class="px-6 md:px-12 lg:px-16 py-32 bg-surface-light dark:bg-surface-dark border-t border-black dark:border-white text-black dark:text-white" id="projects">
+    <div class="max-w-screen-2xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16">
+            <div class="lg:col-span-3">
+                <div class="lg:sticky lg:top-32">
+                    <h2 class="text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-3">
+                        <span class="w-2 h-2 bg-black dark:bg-white"></span>
+                        Projects
+                    </h2>
+                    <h3 class="text-4xl md:text-5xl font-bold tracking-tighter leading-none mb-6">Selected<br/>Works</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-8 max-w-[200px] tracking-tight">
+                        A collection of engineering problems solved with code, design, and precision.
                     </p>
-                </div>
-                <div class="hidden md:block">
-                    <a href="https://github.com/stars/mel-cell/" target="_blank" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:underline group">
-                        View List on GitHub
-                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    <a class="hidden lg:inline-flex items-center text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity" href="https://github.com/mel-cell" target="_blank">
+                        GitHub Archive
                     </a>
                 </div>
             </div>
-            
-            {/* Spacer Column (Hidden visually, just grid gap) */}
-            <div class="hidden md:block md:col-span-1"></div>
-
-            <div class="md:col-span-8 flex flex-col gap-20">
-                {/* Main Featured Project (First Item - Big) */}
-                {featuredProjects.length > 0 && (
-                    <div class="w-full flex flex-col group cursor-pointer animate-on-scroll" style="transition-delay: 0.1s;">
-                        <a href={featuredProjects[0].html_url} target="_blank" rel="noopener noreferrer" class="h-full flex flex-col">
-                            <div class="w-full aspect-video bg-gray-200 overflow-hidden relative mb-6 border border-gray-200">
-                                {featuredProjects[0].imageUrl ? (
-                                    <img 
-                                        src={featuredProjects[0].imageUrl} 
-                                        alt={`Screenshot of ${featuredProjects[0].name}`} 
-                                        class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                                        loading="lazy"
-                                    />
-                                ) : (
-                                    <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 group-hover:bg-gray-200 transition-colors">
-                                        <span class="material-symbols-outlined text-6xl group-hover:scale-110 transition-transform duration-500">web</span>
-                                    </div>
-                                )}
-                            </div>
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-t border-black pt-4 gap-6 grow">
-                                <div class="w-full">
-                                    <h3 class="text-4xl font-bold mb-2">{featuredProjects[0].name.replace(/-/g, ' ')}</h3>
-                                    <p class="text-gray-500 font-mono text-sm mb-4 block">
-                                        {featuredProjects[0].language || 'Code'} {featuredProjects[0].topics && featuredProjects[0].topics.length > 0 ? `/ ${featuredProjects[0].topics.slice(0, 2).join(' / ')}` : ''}
-                                    </p>
-                                    <p class="text-xl text-gray-800 leading-relaxed max-w-3xl">
-                                        {featuredProjects[0].description || "No description provided."}
-                                    </p>
-                                </div>
-                                <span class="inline-flex items-center gap-1 text-sm font-mono border-b border-black pb-0.5 whitespace-nowrap self-start md:self-start mt-2 md:mt-0">View Code</span>
-                            </div>
-                        </a>
+            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-20">
+                <div class="md:col-span-2 group">
+                    <div class="relative w-full aspect-2/1 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
+                        <img alt="Abstract Architecture Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrUuYV6bgDv5yOrqtFw6lqPlhcK3r9Utk-OiommLLDrfgahAdrCAS_VfeJcXPyMInoOajZEZJDZdeP5UJ92k20eIQB8b2h42MvNyRFurssATozgAS-G88YFtxQ35-4NNoI0FCuCNiB6ObuJ77GXWdVOAUE9ais-qHDqzNWSFfRXHtARuhZPFU1KK_PsUbTQ4gpu_q9kM97FyF_x8PeULkaxLBsfIegQomNJnjy4FkQ9DdF1CIDpBTKG5i2BRe8Hoexdkapf-O8ovgs"/>
+                        <div class="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
-                )}
-                
-                {/* Horizontal Scroll for Remaining Projects (Slider - 2 Visible) */}
-                {featuredProjects.length > 1 && (
-                    <div class="w-full animate-on-scroll" style="transition-delay: 0.2s;">
-                        <div class="text-sm font-mono uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-200 pb-2">More Projects</div>
-                        <div class="flex overflow-x-auto gap-8 pb-10 snap-x snap-mandatory scrollbar-hide">
-                            {featuredProjects.slice(1).map((project, index) => (
-                                <div class="min-w-[85vw] md:min-w-[calc(50%-16px)] snap-start flex flex-col group cursor-pointer">
-                                    <a href={project.html_url} target="_blank" rel="noopener noreferrer" class="h-full flex flex-col">
-                                        <div class="w-full aspect-video bg-gray-200 overflow-hidden relative mb-5 border border-gray-200">
-                                            {project.imageUrl ? (
-                                                <img 
-                                                    src={project.imageUrl} 
-                                                    alt={`Screenshot of ${project.name}`} 
-                                                    class="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                                                    loading="lazy"
-                                                />
-                                            ) : (
-                                                <div class="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 group-hover:bg-gray-200 transition-colors">
-                                                    <span class="material-symbols-outlined text-5xl group-hover:scale-110 transition-transform duration-500">folder_open</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div class="flex flex-col justify-between items-start border-t border-gray-300 pt-4 gap-3 grow">
-                                            <div>
-                                                <h3 class="text-2xl font-bold">{project.name.replace(/-/g, ' ')}</h3>
-                                                <p class="text-gray-500 font-mono text-xs mt-1">
-                                                    {project.language || 'Code'} {project.topics && project.topics.length > 0 ? `/ ${project.topics.slice(0, 2).join(' / ')}` : ''}
-                                                </p>
-                                            </div>
-                                            <p class="text-base text-gray-700 line-clamp-2 leading-relaxed">
-                                                {project.description || "No description provided."}
-                                            </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-black dark:border-white pt-5">
+                        <div class="md:col-span-2">
+                            <h4 class="text-2xl font-bold tracking-tight mb-2">E-Commerce Microservices</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight max-w-lg">
+                                A scalable e-commerce backend built with microservices architecture. Handles inventory, order processing, and user authentication independently using message brokers for asynchronous communication.
+                            </p>
+                        </div>
+                        <div class="flex flex-col justify-between items-start md:items-end">
+                            <ul class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 text-right space-y-1 mb-4 md:mb-0">
+                                <li>Node.js</li>
+                                <li>Docker</li>
+                                <li>RabbitMQ</li>
+                            </ul>
+                            <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:gap-3 transition-all" href="#">
+                                View Code <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </a>
                         </div>
                     </div>
-                )}
-
-                {featuredProjects.length === 0 && (
-                     <div class="w-full py-12 text-center text-gray-500 font-mono bg-gray-50 border border-gray-200">
-                        <p>Unable to load projects from the list.</p>
+                </div>
+                <div class="group">
+                    <div class="relative w-full aspect-4/3 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
+                        <img alt="Abstract Tech Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlpoizNzSJnlDB3JwBXIFob0X736zWkrKUTJro928j8qOMP0HHdWEwjutGEwWP3Lz2aHSQtHWhpKyuCYQeg7FWdyCKcykGwjPWqSMI_Fhb3R_yf__6u93sf3OPKmxTtSKpjQ03fvx-QyxkHlKEhuFLDO9Dw6ztS9AV69iYzCSv4lzmu_xtuPVYd0ldYPlOPVvpfT3Iw4SzDqGhrvy4Gu_-swc6lwZkmN0ydfJBAhSvxCXTuLW-unfbIbs-ZDw7XuzuqLR287UMhdUN"/>
                     </div>
-                )}
+                    <div class="flex flex-col h-full justify-between border-t border-black dark:border-white pt-5">
+                        <div class="mb-8">
+                            <h4 class="text-xl font-bold tracking-tight mb-2">Analytics Dashboard</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight mb-4">
+                                Interactive dashboard visualizing complex datasets for financial reporting using advanced charting libraries.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">React</span>
+                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">D3.js</span>
+                            </div>
+                        </div>
+                        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:underline decoration-1 underline-offset-4" href="#">
+                            Live Demo
+                        </a>
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="relative w-full aspect-4/3 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
+                        <img alt="Abstract Concrete Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj94S1KnUTQtXRxqDpdoe0t7OmLGSh497Z7RNTOfXQku9ydHwFBgYtnrvJjcoVKwJJlE9BhoTeaMjfbVW_VL_rT3AOW2hu1dKb9BdxEEW30lUtnjl2R5VucV60DK45g3xX1EeseHFh8oE6LbcWjSPKs3VN8gR2F4RcX6Oo0-t_l0Cs8b9FWkgVnijRddlg8j6Lum5pS4vrQkT7EBfcxwiW_45SAETGWOLtdAmsIl-wpXiIL5n7dHC57YaTAdv73YCxeegdpZ87yY6j"/>
+                    </div>
+                    <div class="flex flex-col h-full justify-between border-t border-black dark:border-white pt-5">
+                        <div class="mb-8">
+                            <h4 class="text-xl font-bold tracking-tight mb-2">Task Management</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight mb-4">
+                                Cross-platform mobile application for personal productivity and team collaboration with real-time sync.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">React Native</span>
+                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">Firebase</span>
+                            </div>
+                        </div>
+                        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:underline decoration-1 underline-offset-4" href="#">
+                            App Store
+                        </a>
+                    </div>
+                </div>
             </div>
-            
-            {/* Mobile Link View List */}
-            <div class="md:hidden col-span-full mt-8">
-                 <a href="https://github.com/stars/mel-cell/" target="_blank" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:underline group">
-                    View List on GitHub
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <div class="lg:hidden mt-8 text-center w-full col-span-1">
+                <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1" href="https://github.com" target="_blank">
+                     View All on GitHub
                 </a>
             </div>
         </div>
     </div>
 </section>
-
-<style>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-</style>

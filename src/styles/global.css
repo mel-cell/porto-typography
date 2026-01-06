@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+/* Force class-based dark mode strategy. 
+   Since we don't add the 'dark' class to HTML, this effectively disables system dark mode. */
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "Space Grotesk", monospace;
+  --font-display: "Inter", sans-serif;
+  --font-mono: "Inter", sans-serif;
 
   --color-primary: #1a1a1a;
   --color-background-light: #ffffff;
@@ -13,14 +17,24 @@
   --color-text-dark: #e0e0e0;
   --color-gray-light: #757575;
   --color-gray-dark: #a0a0a0;
+
+  --text-huge: 14rem;
+  --text-mega: clamp(4rem, 18vw, 24rem);
+  --text-footer-giant: clamp(12vw, 22vw, 30rem);
+
+  --radius-pill: 9999px;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  --spacing-128: 32rem;
 }
 
-/* Custom utilities based on user snippet */
+/* Custom utilities */
 .giant-text {
-  font-size: clamp(3.5rem, 14vw, 12rem);
+  font-size: clamp(3rem, 14vw, 12rem);
   line-height: 0.85;
   letter-spacing: -0.04em;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
 }
 
 .swiss-grid {
@@ -29,7 +43,35 @@
   gap: 1rem;
 }
 
-html,
+.swiss-type {
+  font-feature-settings: "ss01", "ss02";
+}
+
+.texture-overlay {
+  mix-blend-mode: multiply;
+}
+
+.hero-title {
+  font-size: clamp(4rem, 15.5vw, 18rem);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.grid-lines {
+  background-size: 25% 100%;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px
+  );
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
 body {
   height: 100%;
 }
