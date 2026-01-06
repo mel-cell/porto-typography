@@ -1,0 +1,79 @@
+[
+  {
+    "title": "DockTop",
+    "description": "DockTop is a modern, feature-rich terminal user interface for managing Docker containers. Built with Rust and Ratatui, it provides real-time monitoring, interactive wizards, and a beautiful interface.",
+    "tags": ["Rust", "Ratatui", "Docker", "CLI"],
+    "repoUrl": "https://github.com/mel-cell/docktop",
+    "image": "https://raw.githubusercontent.com/mel-cell/docktop/main/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": true,
+    "Lang": ["Rust", "Shell", "TOML"],
+    "imagePath": "image.png"
+  },
+  {
+    "title": "StreetAI",
+    "description": "AI-Powered Interactive Maps combining geolocation with AI-generated insights. Users can select a location on the map, and AI will provide detailed explanations.",
+    "tags": ["AI", "Maps", "TypeScript", "Google Maps API"],
+    "repoUrl": "https://github.com/terarush/StreetAI",
+    "image": "https://raw.githubusercontent.com/terarush/StreetAI/main/demo/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["TypeScript", "HTML", "CSS"],
+    "imagePath": "demo/image.png"
+  },
+  {
+    "title": "Coralwind",
+    "description": "Comprehensive hotel booking web application created for UPK. Features room management, booking flows, and specific administration panels.",
+    "tags": ["Laravel", "PHP", "Web App"],
+    "repoUrl": "https://github.com/mel-cell/coralwind",
+    "image": "https://raw.githubusercontent.com/mel-cell/coralwind/main/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["PHP", "Blade", "CSS"],
+    "imagePath": "image.png"
+  },
+  {
+    "title": "Mellow Movie TMDb",
+    "description": "Frontend module for Sekawan Media training. A dynamic movie wiki consuming the TMDb API to display movie details and information.",
+    "tags": ["JavaScript", "TMDb API", "Frontend"],
+    "repoUrl": "https://github.com/mel-cell/mellow-movie_TMDb-api",
+    "image": "https://raw.githubusercontent.com/mel-cell/mellow-movie_TMDb-api/main/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["JavaScript", "HTML"],
+    "imagePath": "image.png"
+  },
+  {
+    "title": "FastUnduh",
+    "description": "High-performance universal video downloader built with Go (Fiber), Vue 3, and Redis. Features asynchronous job queues, smart polling, and TTL storage architecture.",
+    "tags": ["Go", "Vue 3", "Redis", "Video Downloader"],
+    "repoUrl": "https://github.com/mel-cell/FastUnduh",
+    "image": "https://raw.githubusercontent.com/mel-cell/FastUnduh/main/demo/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["Go", "Vue"],
+    "imagePath": "demo/image.png"
+  },
+  {
+    "title": "Replas Banksampah",
+    "description": "Waste bank management system. (Description auto-fetched from repository).",
+    "tags": ["Laravel", "PHP"],
+    "repoUrl": "https://github.com/mel-cell/replas-banksampah",
+    "image": "https://raw.githubusercontent.com/mel-cell/replas-banksampah/main/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["PHP"],
+    "imagePath": "image.png"
+  },
+  {
+    "title": "Toko Thrift Laravel",
+    "description": "Final project for Sekawan Media Fullstack Laravel module, enhanced with Next.js features.",
+    "tags": ["Laravel", "Next.js", "E-commerce"],
+    "repoUrl": "https://github.com/mel-cell/Toko_Thrift-laravel",
+    "image": "https://raw.githubusercontent.com/mel-cell/Toko_Thrift-laravel/main/image.png",
+    "fallbackImage": "/placeholder2.png",
+    "featured": false,
+    "Lang": ["PHP", "Blade"],
+    "imagePath": "image.png"
+  }
+]

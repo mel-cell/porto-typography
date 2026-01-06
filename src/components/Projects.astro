@@ -1,3 +1,8 @@
+---
+import { getProjects } from '../services/projects';
+const projects = await getProjects();
+---
+
 <section class="px-6 md:px-12 lg:px-16 py-32 bg-surface-light dark:bg-surface-dark border-t border-black dark:border-white text-black dark:text-white" id="projects">
     <div class="max-w-screen-2xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16">
@@ -9,84 +14,132 @@
                     </h2>
                     <h3 class="text-4xl md:text-5xl font-bold tracking-tighter leading-none mb-6">Selected<br/>Works</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-8 max-w-[200px] tracking-tight">
-                        A collection of engineering problems solved with code, design, and precision.
+                        Authentic engineering solutions from my GitHub portfolio.
                     </p>
-                    <a class="hidden lg:inline-flex items-center text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity" href="https://github.com/mel-cell" target="_blank">
+
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        {["ALL", ...new Set(projects.flatMap(p => p.Lang))].map((lang) => (
+                            <button
+                                aria-label={`Filter by ${lang}`}
+                                data-filter={lang}
+                                class="lang-filter-btn px-3 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all bg-transparent data-[active=true]:bg-black data-[active=true]:text-white dark:data-[active=true]:bg-white dark:data-[active=true]:text-black"
+                            >
+                                {lang}
+                            </button>
+                        ))}
+                    </div>
+                    <a class="hidden lg:inline-flex items-center text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity" href="https://github.com/stars/mel-cell/lists/porto" target="_blank">
                         GitHub Archive
                     </a>
                 </div>
             </div>
+            
             <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-20">
-                <div class="md:col-span-2 group">
-                    <div class="relative w-full aspect-2/1 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
-                        <img alt="Abstract Architecture Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrUuYV6bgDv5yOrqtFw6lqPlhcK3r9Utk-OiommLLDrfgahAdrCAS_VfeJcXPyMInoOajZEZJDZdeP5UJ92k20eIQB8b2h42MvNyRFurssATozgAS-G88YFtxQ35-4NNoI0FCuCNiB6ObuJ77GXWdVOAUE9ais-qHDqzNWSFfRXHtARuhZPFU1KK_PsUbTQ4gpu_q9kM97FyF_x8PeULkaxLBsfIegQomNJnjy4FkQ9DdF1CIDpBTKG5i2BRe8Hoexdkapf-O8ovgs"/>
-                        <div class="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-black dark:border-white pt-5">
-                        <div class="md:col-span-2">
-                            <h4 class="text-2xl font-bold tracking-tight mb-2">E-Commerce Microservices</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight max-w-lg">
-                                A scalable e-commerce backend built with microservices architecture. Handles inventory, order processing, and user authentication independently using message brokers for asynchronous communication.
-                            </p>
+                {projects.map((project, index) => (
+                    <div class={`project-item group ${index === 0 ? 'md:col-span-2' : ''}`} data-langs={JSON.stringify(project.Lang)}>
+                        <div class={`relative w-full overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100`}>
+                            <img 
+                                alt={project.title} 
+                                class={`w-full object-cover m-2 ${index === 0 ? 'object-top' : ''} grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out`}
+                                src={project.image}
+                                onerror={`this.onerror=null; this.src='${project.fallbackImage || 'https://placeskull.com/800/600/222222/404-image-not-found'}';`}
+                            />
+                            {index === 0 && (
+                                <div class="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            )}
                         </div>
-                        <div class="flex flex-col justify-between items-start md:items-end">
-                            <ul class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 text-right space-y-1 mb-4 md:mb-0">
-                                <li>Node.js</li>
-                                <li>Docker</li>
-                                <li>RabbitMQ</li>
-                            </ul>
-                            <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:gap-3 transition-all" href="#">
-                                View Code <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="group">
-                    <div class="relative w-full aspect-4/3 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
-                        <img alt="Abstract Tech Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlpoizNzSJnlDB3JwBXIFob0X736zWkrKUTJro928j8qOMP0HHdWEwjutGEwWP3Lz2aHSQtHWhpKyuCYQeg7FWdyCKcykGwjPWqSMI_Fhb3R_yf__6u93sf3OPKmxTtSKpjQ03fvx-QyxkHlKEhuFLDO9Dw6ztS9AV69iYzCSv4lzmu_xtuPVYd0ldYPlOPVvpfT3Iw4SzDqGhrvy4Gu_-swc6lwZkmN0ydfJBAhSvxCXTuLW-unfbIbs-ZDw7XuzuqLR287UMhdUN"/>
-                    </div>
-                    <div class="flex flex-col h-full justify-between border-t border-black dark:border-white pt-5">
-                        <div class="mb-8">
-                            <h4 class="text-xl font-bold tracking-tight mb-2">Analytics Dashboard</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight mb-4">
-                                Interactive dashboard visualizing complex datasets for financial reporting using advanced charting libraries.
-                            </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">React</span>
-                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">D3.js</span>
+                        
+                        {index === 0 ? (
+                            // Layout for Featured Project (Broad)
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-black dark:border-white pt-5">
+                                <div class="md:col-span-2">
+                                    <h4 class="text-2xl font-bold tracking-tight mb-2">{project.title}</h4>
+                                    <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 space-y-1 mb-4">
+                                        {project.Lang.map(lang => (
+                                            <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">{lang}</span>
+                                        ))}
+                                    </p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight max-w-lg">
+                                        {project.description}
+                                    </p>
+                                </div>
+                                <div class="flex flex-col justify-between items-start md:items-end">
+                                    <ul class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 text-right space-y-1 mb-4 md:mb-0">
+                                        {project.tags.slice(0, 5).map(tag => <li>{tag}</li>)}
+                                        {project.tags.length > 5 && <li>...</li>}
+                                    </ul>
+                                    <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:gap-3 transition-all" href={project.repoUrl} target="_blank">
+                                        View Code <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:underline decoration-1 underline-offset-4" href="#">
-                            Live Demo
-                        </a>
-                    </div>
-                </div>
-                <div class="group">
-                    <div class="relative w-full aspect-4/3 overflow-hidden border border-gray-200 dark:border-gray-800 mb-6 bg-gray-100">
-                        <img alt="Abstract Concrete Texture" class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj94S1KnUTQtXRxqDpdoe0t7OmLGSh497Z7RNTOfXQku9ydHwFBgYtnrvJjcoVKwJJlE9BhoTeaMjfbVW_VL_rT3AOW2hu1dKb9BdxEEW30lUtnjl2R5VucV60DK45g3xX1EeseHFh8oE6LbcWjSPKs3VN8gR2F4RcX6Oo0-t_l0Cs8b9FWkgVnijRddlg8j6Lum5pS4vrQkT7EBfcxwiW_45SAETGWOLtdAmsIl-wpXiIL5n7dHC57YaTAdv73YCxeegdpZ87yY6j"/>
-                    </div>
-                    <div class="flex flex-col h-full justify-between border-t border-black dark:border-white pt-5">
-                        <div class="mb-8">
-                            <h4 class="text-xl font-bold tracking-tight mb-2">Task Management</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight mb-4">
-                                Cross-platform mobile application for personal productivity and team collaboration with real-time sync.
-                            </p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">React Native</span>
-                                <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">Firebase</span>
+                        ) : (
+                            // Layout for Standard Projects
+                            <div class="flex flex-col h-full justify-between border-t border-black dark:border-white pt-5">
+                                <div class="mb-8">
+                                    <h4 class="text-xl font-bold tracking-tight mb-2">{project.title}</h4>
+                                    <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 space-y-1 mb-4">
+                                        {project.Lang.map(lang => (
+                                            <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">{lang}</span>
+                                        ))}
+                                    </p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed tracking-tight mb-4">
+                                        {project.description}
+                                    </p>
+                                    <div class="flex flex-wrap gap-2">
+                                        {project.tags.map(tag => (
+                                            <span class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-300 dark:border-gray-700 rounded-sm">{tag}</span>
+                                        ))}
+                                    </div>
+                                     <div class="flex flex-col justify-between items-start md:items-end">
+                                   
+                                    <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:gap-3 transition-all" href={project.repoUrl} target="_blank">
+                                        View Code <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                    </a>
+                                    </div>
+                                </div>
+                            
                             </div>
-                        </div>
-                        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide group-hover:underline decoration-1 underline-offset-4" href="#">
-                            App Store
-                        </a>
+                        )}
                     </div>
-                </div>
+                ))}
             </div>
+            
+            
             <div class="lg:hidden mt-8 text-center w-full col-span-1">
-                <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1" href="https://github.com" target="_blank">
+                <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide border-b border-black dark:border-white pb-1" href="https://github.com/mel-cell?tab=repositories" target="_blank">
                      View All on GitHub
                 </a>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    const buttons = document.querySelectorAll('.lang-filter-btn');
+    const projects = document.querySelectorAll('.project-item');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.getAttribute('data-filter');
+
+            // Update active state
+            buttons.forEach(b => b.setAttribute('data-active', 'false'));
+            btn.setAttribute('data-active', 'true');
+
+            // Filter projects
+            projects.forEach(element => {
+                const project = element as HTMLElement;
+                const langs = JSON.parse(project.getAttribute('data-langs') || '[]');
+                if (filter === 'ALL' || langs.includes(filter)) {
+                    project.style.display = '';
+                } else {
+                    project.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Set ALL as active initially
+    document.querySelector('.lang-filter-btn[data-filter="ALL"]')?.setAttribute('data-active', 'true');
+</script>

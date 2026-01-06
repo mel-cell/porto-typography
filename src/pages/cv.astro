@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getProjects } from '../services/projects';
+
+const projects = await getProjects();
+---
+
+<Layout title="CV - Maulidani Melvino">
+    <!-- Back Button -->
+    <a href="/" class="fixed top-6 left-6 md:top-8 md:left-8 z-50 flex items-center gap-2 p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group" aria-label="Back to Home">
+        <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+    </a>
+
+    <main class="bg-surface-light dark:bg-surface-dark text-black dark:text-white min-h-screen pt-24 pb-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            
+            <!-- CV Header -->
+            <header class="border-b-2 border-black dark:border-white pb-12 mb-12 flex flex-col md:flex-row gap-8 justify-between items-start md:items-end">
+                <div>
+                    <h1 class="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-4 leading-none">
+                        Maulidani Brian Melvino
+                    </h1>
+                    <p class="text-xl md:text-2xl font-medium tracking-tight text-gray-600 dark:text-gray-400">
+                        Software Engineer & Creative Coder
+                    </p>
+                </div>
+                <div class="flex flex-col items-start md:items-end gap-2 text-sm font-medium uppercase tracking-wide">
+                    <a href="mailto:melmel57799@gmail.com" class="hover:underline">melmel57799@gmail.com</a>
+                    <a href="https://github.com/mel-cell" target="_blank" class="hover:underline">github.com/mel-cell</a>
+                    <span>Malang, Indonesia</span>
+                </div>
+            </header>
+
+            <!-- Experience / About -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
+                <div class="md:col-span-1">
+                    <h2 class="text-sm font-bold uppercase tracking-widest border-b border-black dark:border-white pb-2 mb-4">Profile</h2>
+                </div>
+                <div class="md:col-span-3 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                    <p>
+                        Passionate Software Developer with a strong focus on backend systems, cloud infrastructure, and modern frontend frameworks. 
+                        Experienced in building scalable applications using Rust, Go, and PHP (Laravel). 
+                        Dedicated to writing clean, maintainable code and optimizing performance. 
+                        Always eager to learn new technologies and solve complex engineering challenges.
+                    </p>
+                </div>
+            </section>
+
+             <!-- Skills -->
+             <section class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
+                <div class="md:col-span-1">
+                    <h2 class="text-sm font-bold uppercase tracking-widest border-b border-black dark:border-white pb-2 mb-4">Tech Stick</h2>
+                </div>
+                <div class="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-8">
+                    <div>
+                        <h3 class="font-bold mb-2">Languages</h3>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                            <li>Rust</li>
+                            <li>Go (Golang)</li>
+                            <li>TypeScript / JavaScript</li>
+                            <li>PHP</li>
+                            <li>Dart</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold mb-2">Frameworks</h3>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                            <li>Laravel</li>
+                            <li>Next.js / Vue.js</li>
+                            <li>Ratatui (TUI)</li>
+                            <li>Flutter</li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 class="font-bold mb-2">Tools</h3>
+                        <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                            <li>Docker</li>
+                            <li>Git</li>
+                            <li>Linux / Shell</li>
+                            <li>Redis</li>
+                             <li>PostgreSQL / MySQL</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Selected Projects -->
+             <section class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
+                <div class="md:col-span-1">
+                    <h2 class="text-sm font-bold uppercase tracking-widest border-b border-black dark:border-white pb-2 mb-4">Key Projects</h2>
+                </div>
+                <div class="md:col-span-3 space-y-10">
+                    {projects.filter(p => p.featured || p.tags.includes('Rust') || p.tags.includes('Go')).slice(0, 4).map(project => (
+                        <div class="group">
+                             <div class="flex justify-between items-baseline mb-2">
+                                <h3 class="text-2xl font-bold tracking-tight">{project.title}</h3>
+                                <a href={project.repoUrl} target="_blank" class="text-xs uppercase font-bold border border-black dark:border-white px-2 py-1 rounded hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+                                    View Code
+                                </a>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
+                                {project.description}
+                            </p>
+                             <ul class="flex flex-wrap gap-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+                                {project.tags.slice(0, 4).map(tag => (
+                                    <li class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">{tag}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+             <!-- Education (Placeholder) -->
+             <section class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
+                <div class="md:col-span-1">
+                    <h2 class="text-sm font-bold uppercase tracking-widest border-b border-black dark:border-white pb-2 mb-4">Education</h2>
+                </div>
+                <div class="md:col-span-3">
+                    <div class="mb-6">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-xl font-bold">SMKN 6 Malang</h3>
+                            <span class="text-sm font-medium text-gray-500">2024 - 2026</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400">Software Engineering (RPL)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer for CV -->
+            <footer class="mt-20 border-t-2 border-black dark:border-white pt-8 flex justify-between items-center text-xs font-bold uppercase tracking-widest text-gray-500">
+                <span>Maulidani Melvino</span>
+                <span>© 2026</span>
+            </footer>
+
+        </div>
+    </main>
+</Layout>
